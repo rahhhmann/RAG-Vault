@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🔐 RAG-Vault
+#  RAG-Vault
 
 ### A curated collection of production-grade Retrieval-Augmented Generation implementations
 
@@ -17,7 +17,7 @@
 
 ---
 
-## 📌 Table of Contents
+##  Table of Contents
 
 - [Overview](#-overview)
 - [Architecture Comparison](#-architecture-comparison)
@@ -33,7 +33,7 @@
 
 ---
 
-## 🔍 Overview
+##  Overview
 
 **RAG-Vault** is a systematic exploration of Retrieval-Augmented Generation (RAG) paradigms. Each project in this vault tackles a different retrieval problem — from the foundational pipeline to self-correcting, vectorless, and multimodal variants — along with a full evaluation framework using industry-standard RAGAS metrics.
 
@@ -50,7 +50,7 @@ RAG-Vault/
 
 ---
 
-## 📊 Architecture Comparison
+##  Architecture Comparison
 
 | Feature | Simple RAG | Multimodal RAG | Corrective RAG | Vectorless RAG | RAGas |
 |---|---|---|---|---|---|
@@ -67,7 +67,7 @@ RAG-Vault/
 
 ---
 
-## 📁 Project Index
+##  Project Index
 
 ---
 
@@ -83,15 +83,15 @@ A command-line RAG pipeline that lets you chat with any PDF using local HuggingF
 
 ```mermaid
 flowchart LR
-    A[📄 PDF Document] --> B[PyPDFLoader]
+    A[ PDF Document] --> B[PyPDFLoader]
     B --> C[Text Splitter\nchunk_size=1000\noverlap=100]
     C --> D[HuggingFace Embeddings\nall-MiniLM-L6-v2\nLocal · Free]
     D --> E[(ChromaDB\nVector Store)]
-    F[💬 User Query] --> G[Similarity Search\nTop-4 Chunks]
+    F[ User Query] --> G[Similarity Search\nTop-4 Chunks]
     E --> G
     G --> H[Prompt Builder]
     H --> I[Gemini 2.5 Flash]
-    I --> J[✅ Answer]
+    I --> J[ Answer]
 
     style A fill:#4a6cf7,color:#fff
     style E fill:#FF6B35,color:#fff
@@ -109,7 +109,7 @@ flowchart LR
 
 ---
 
-### 2. 🧠 Multimodal RAG — PaperChat
+### 2.  Multimodal RAG — PaperChat
 
 > **Beyond text — understands tables, figures, diagrams, and equations in research papers.**
 
@@ -121,7 +121,7 @@ PaperChat combines three extraction strategies before indexing: raw text via PyM
 
 ```mermaid
 flowchart TD
-    A[📄 PDF Upload] --> B{Page Type Check\nLocal · Free}
+    A[ PDF Upload] --> B{Page Type Check\nLocal · Free}
 
     B -->|Text Page| C[PyMuPDF\nText Extraction]
     B -->|Table Page| D[pdfplumber\nTable → col1 ﹕ col2 format]
@@ -134,12 +134,12 @@ flowchart TD
     F --> G[Gemini Embeddings\ngemini-embedding-001]
     G --> H[(Chroma\nIn-Memory Store)]
 
-    I[💬 User Question] --> J[Similarity Search\nTop-5 Chunks]
+    I[ User Question] --> J[Similarity Search\nTop-5 Chunks]
     H --> J
 
     J --> K[Groq LLM\nLlama 3.3 70B]
     K --> L{Rate Limit?}
-    L -->|No| M[✅ Answer]
+    L -->|No| M[ Answer]
     L -->|Yes| N[Fallback:\nllama-3.1-8b\nor mixtral-8x7b]
     N --> M
 
@@ -161,7 +161,7 @@ flowchart TD
 
 ---
 
-### 3. 🔁 Corrective RAG (CRAG)
+### 3.  Corrective RAG (CRAG)
 
 > **Self-correcting retrieval — grades documents, filters noise, and falls back to the web when local knowledge fails.**
 
@@ -173,12 +173,12 @@ Implements the [CRAG paper](https://arxiv.org/abs/2401.15884) paradigm using bot
 
 ```mermaid
 flowchart TD
-    A[💬 User Query] --> B[ChromaDB\nRetrieval]
+    A[ User Query] --> B[ChromaDB\nRetrieval]
     B --> C[Document Grader\nGroq LLM]
     C --> D{Relevance\nThreshold Met?}
 
-    D -->|✅ Yes| E[Generate Answer\nGroq LLM]
-    D -->|❌ No| F[Tavily Web Search\nReal-time Knowledge]
+    D -->| Yes| E[Generate Answer\nGroq LLM]
+    D -->| No| F[Tavily Web Search\nReal-time Knowledge]
 
     F --> G[Context Refiner]
     G --> E
@@ -186,8 +186,8 @@ flowchart TD
     E --> H[Answer Critique\nGroq LLM]
     H --> I{Quality\nCheck Passed?}
 
-    I -->|✅ Yes| J[✅ Final Answer]
-    I -->|❌ No| K[Refine & Retry]
+    I -->| Yes| J[ Final Answer]
+    I -->| No| K[Refine & Retry]
     K --> J
 
     style A fill:#4a6cf7,color:#fff
@@ -229,7 +229,7 @@ flowchart LR
 
 ---
 
-### 4. ⚡ Vectorless RAG
+### 4.  Vectorless RAG
 
 > **Classical IR meets LLMs — zero embeddings, zero vector databases, fully deterministic.**
 
@@ -249,18 +249,18 @@ Where `k1` controls term saturation and `b` controls length normalization — bo
 
 ```mermaid
 flowchart TD
-    A[📄 Document\nTXT · MD · PDF] --> B[Text Chunker\n300-word overlapping windows]
+    A[ Document\nTXT · MD · PDF] --> B[Text Chunker\n300-word overlapping windows]
     B --> C[BM25 Index Builder\nBuilds inverted index\nComputes avgdl]
     C --> D[(BM25 Engine\nTerm → doc_id freq map)]
 
-    E[💬 User Query] --> F[Tokenize\nLowercase + remove stopwords]
+    E[ User Query] --> F[Tokenize\nLowercase + remove stopwords]
     F --> G[BM25 Scorer\nRanks all chunks]
     D --> G
 
     G --> H[Top-K Chunks\nwith visible scores]
     H --> I[Prompt Builder]
     I --> J[Groq LLM\nLlama 3.3 70B]
-    J --> K[✅ Grounded Answer\nwith source citations]
+    J --> K[ Grounded Answer\nwith source citations]
 
     style A fill:#4a6cf7,color:#fff
     style D fill:#FF6B35,color:#fff
@@ -285,7 +285,7 @@ flowchart TD
 
 ---
 
-### 5. 📊 RAGas Evaluation Framework
+### 5.  RAGas Evaluation Framework
 
 > **Automated quality measurement for RAG pipelines — four RAGAS metrics, one clean report.**
 
@@ -297,21 +297,21 @@ A complete RAG pipeline built with evaluation-first thinking. Uses RAGAS — the
 
 ```mermaid
 flowchart TD
-    A[("📄 sample.txt\nKnowledge Base")] --> B[RecursiveCharacterTextSplitter\nchunk_size=500 · overlap=50]
+    A[(" sample.txt\nKnowledge Base")] --> B[RecursiveCharacterTextSplitter\nchunk_size=500 · overlap=50]
     B --> C[HuggingFace Embeddings\nall-MiniLM-L6-v2 · Local]
     C --> D[(ChromaDB\nPersistent Store)]
 
     D --> E{Mode\nSelector}
 
-    E -->|--query flag| F[💬 Interactive Chat\nUser types question]
-    E -->|default| G[📋 EVAL_QUESTIONS\n4 Ground Truth Q&A pairs]
+    E -->|--query flag| F[ Interactive Chat\nUser types question]
+    E -->|default| G[ EVAL_QUESTIONS\n4 Ground Truth Q&A pairs]
 
     F --> H[Similarity Search\nk=3 chunks]
     G --> H
 
     H --> I[Groq LLaMA 3.1-8b\nTemperature = 0.1]
 
-    I -->|Query Mode| J[🖥️ Print Answer]
+    I -->|Query Mode| J[ Print Answer]
     I -->|Eval Mode| K[RAGAS Evaluation]
 
     K --> L[Faithfulness]
@@ -319,7 +319,7 @@ flowchart TD
     K --> N[Context Precision]
     K --> O[Context Recall]
 
-    L & M & N & O --> P[📊 Evaluation Report\n0.0 → 1.0 per metric]
+    L & M & N & O --> P[ Evaluation Report\n0.0 → 1.0 per metric]
 
     style A fill:#4a6cf7,color:#fff
     style D fill:#FF6B35,color:#fff
@@ -351,7 +351,7 @@ context_recall        0.89
 
 ---
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 | Layer | Technologies |
 |---|---|
@@ -368,18 +368,18 @@ context_recall        0.89
 
 ---
 
-## 🗺 RAG Evolution Map
+##  RAG Evolution Map
 
 ```mermaid
 flowchart TD
-    A["📄 Simple RAG\nBaseline pipeline\nPDF → Embed → Retrieve → Generate"]
+    A[" Simple RAG\nBaseline pipeline\nPDF → Embed → Retrieve → Generate"]
 
-    A --> B["🧠 Multimodal RAG\nAdd vision understanding\nText + Tables + Figures"]
-    A --> C["🔁 Corrective RAG\nAdd self-correction\nGrade → Fallback → Critique"]
-    A --> D["⚡ Vectorless RAG\nRemove vector dependency\nBM25 keyword retrieval"]
-    A --> E["📊 RAGas Evaluation\nAdd measurement layer\nFaithfulness · Relevancy · Recall"]
+    A --> B[" Multimodal RAG\nAdd vision understanding\nText + Tables + Figures"]
+    A --> C[" Corrective RAG\nAdd self-correction\nGrade → Fallback → Critique"]
+    A --> D[" Vectorless RAG\nRemove vector dependency\nBM25 keyword retrieval"]
+    A --> E[" RAGas Evaluation\nAdd measurement layer\nFaithfulness · Relevancy · Recall"]
 
-    B --> F["🚀 Production RAG\nAll capabilities combined"]
+    B --> F[" Production RAG\nAll capabilities combined"]
     C --> F
     D --> F
     E --> F
@@ -396,7 +396,7 @@ Each project is a deliberate step in understanding a different dimension of the 
 
 ---
 
-## 👤 Author
+##  Author
 
 **Ashikur Rahman**
 
