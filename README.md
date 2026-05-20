@@ -197,9 +197,20 @@ flowchart TD
     style J fill:#22C55E,color:#fff
 ```
 
-#### CRAG vs Basic RAG
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#000000",
+    "primaryColor": "#111827",
+    "primaryTextColor": "#ffffff",
+    "primaryBorderColor": "#ffffff",
+    "lineColor": "#ffffff",
+    "secondaryColor": "#1f2937",
+    "tertiaryColor": "#374151",
+    "fontFamily": "Inter, Arial"
+  }
+}}%%
 
-```mermaid
 flowchart LR
     subgraph Basic ["Basic RAG"]
         direction LR
@@ -208,15 +219,31 @@ flowchart LR
 
     subgraph CRAG ["Corrective RAG"]
         direction LR
-        R2[Retrieve] --> GR[Grade] --> CH{Good?}
+        R2[Retrieve] --> GR[Grade]
+        GR --> CH{Good?}
+
         CH -->|Yes| G2[Generate]
         CH -->|No| WS[Web Search] --> G2
-        G2 --> CR[Critique] --> FA[Final Answer]
+
+        G2 --> CR[Critique]
+        CR --> FA[Final Answer]
     end
 
-    style Basic fill:#fee2e2
-    style CRAG fill:#dcfce7
-```
+    style Basic fill:#111111,stroke:#ffffff,color:#ffffff
+    style CRAG fill:#052e16,stroke:#22c55e,color:#ffffff
+
+    style R1 fill:#1f2937,stroke:#ffffff,color:#ffffff
+    style G1 fill:#1f2937,stroke:#ffffff,color:#ffffff
+
+    style R2 fill:#1f2937,stroke:#ffffff,color:#ffffff
+    style GR fill:#1f2937,stroke:#ffffff,color:#ffffff
+    style CH fill:#374151,stroke:#ffffff,color:#ffffff
+    style WS fill:#7f1d1d,stroke:#ef4444,color:#ffffff
+    style G2 fill:#1e3a8a,stroke:#60a5fa,color:#ffffff
+    style CR fill:#3f3f46,stroke:#ffffff,color:#ffffff
+    style FA fill:#14532d,stroke:#22c55e,color:#ffffff
+
+    linkStyle default stroke:#ffffff,stroke-width:2px,color:#ffffff
 
 #### Two Implementations
 | Implementation | Description |
