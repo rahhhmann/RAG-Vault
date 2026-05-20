@@ -71,7 +71,7 @@ RAG-Vault/
 
 ---
 
-### 1. 📄 Simple RAG
+### 1.  Simple RAG
 
 > **Baseline pipeline — the foundation every RAG system builds on.**
 
